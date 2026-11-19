@@ -1,15 +1,39 @@
-﻿artifacts/
+﻿# Artifacts, data, and environments
+artifacts/
 data/
 .venv/
+venv/
+ENV/
+env/
+
+# IDE
 .idea/
+.vscode/
+
+# Python caches/build
 __pycache__/
 *.py[cod]
 *.egg-info/
+build/
+dist/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
+
+# MLflow/Streamlit local state
 mlruns/
 .mlflow/
 .streamlit/
+
+# Secrets and local config
+.env
+.env.*
+*.pem
+*.key
+
+# Logs and OS files
 *.log
 .DS_Store
+Thumbs.db
+
+.env
