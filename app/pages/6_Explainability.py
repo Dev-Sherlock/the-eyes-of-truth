@@ -3,14 +3,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-import app._path  # noqa: F401  -- project-root path bootstrap
-
+import numpy as np
 import streamlit as st
 import torch
-import numpy as np
 from PIL import Image
+
+import app._path  # noqa: F401  -- project-root path bootstrap
 from configs.settings import get_settings
-from src.data.cifar10 import base_transform, CLASSES
+from src.data.cifar10 import CLASSES, base_transform
 from src.models.classifier import SmallClassifier
 from src.visualization.gradcam import GradCAM
 
@@ -32,11 +32,15 @@ if upload:
         cam, cls_idx = cam_engine(x)
         cam_engine.close()
         cam_np = cam.numpy()
-        heat = (np.stack([cam_np, np.zeros_like(cam_np), 1-cam_np], axis=-1) * 255).clip(0,255).astype(np.uint8)
+        heat = (
+            (np.stack([cam_np, np.zeros_like(cam_np), 1 - cam_np], axis=-1) * 255)
+            .clip(0, 255)
+            .astype(np.uint8)
+        )
         heat_img = Image.fromarray(heat).resize(img.size)
         overlay = Image.blend(img.resize(heat_img.size), heat_img, alpha=0.45)
         st.image(overlay, caption=f"Grad-CAM: {classes[cls_idx]}", width=256)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         st.warning(f"Explainability unavailable: {e}")
 else:
     st.info("Upload an image and ensure a trained classifier exists.")

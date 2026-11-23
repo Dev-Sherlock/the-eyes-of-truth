@@ -1,8 +1,10 @@
 ﻿from __future__ import annotations
 
 from pathlib import Path
-from PIL import Image
+
 import numpy as np
+from PIL import Image
+
 
 def blur_score(image_path: str) -> float:
     """Simple variance-of-Laplacian-like proxy without cv2: uses gradient magnitude variance."""

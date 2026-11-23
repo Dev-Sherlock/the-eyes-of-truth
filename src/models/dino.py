@@ -1,14 +1,15 @@
 ﻿from __future__ import annotations
 
-import copy
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
-import torchvision.models as models
+from torch import nn
+from torchvision import models
 
 
 class DINOHead(nn.Module):
-    def __init__(self, in_dim: int, out_dim: int = 256, hidden_dim: int = 512, bottleneck_dim: int = 128):
+    def __init__(
+        self, in_dim: int, out_dim: int = 256, hidden_dim: int = 512, bottleneck_dim: int = 128
+    ):
         super().__init__()
         self.mlp = nn.Sequential(
             nn.Linear(in_dim, hidden_dim),

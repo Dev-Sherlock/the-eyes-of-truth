@@ -1,8 +1,6 @@
 ﻿from __future__ import annotations
 
-import random
 import torch
-from torchvision import transforms
 
 
 def add_noise(img_tensor: torch.Tensor, std: float = 0.05) -> torch.Tensor:
@@ -21,4 +19,8 @@ def robustness_check(model, loader, device="cpu", noise_std: float = 0.05):
         noisy_correct += (pred_noisy == y).sum().item()
         total += y.size(0)
     total = max(total, 1)
-    return {"clean_acc": clean_correct / total, "noisy_acc": noisy_correct / total, "noise_std": noise_std}
+    return {
+        "clean_acc": clean_correct / total,
+        "noisy_acc": noisy_correct / total,
+        "noise_std": noise_std,
+    }

@@ -1,5 +1,4 @@
-﻿import torch
-from configs.settings import get_settings
+﻿from configs.settings import get_settings
 from src.data.cifar10 import get_cifar10_dataloaders
 from src.models.classifier import SmallClassifier
 
@@ -12,7 +11,9 @@ def test_settings_defaults():
 
 def test_dataloader_and_model_forward_cpu():
     s = get_settings()
-    bundle = get_cifar10_dataloaders(s.data_dir, batch_size=4, num_workers=0, image_size=32, limit=8)
+    bundle = get_cifar10_dataloaders(
+        s.data_dir, batch_size=4, num_workers=0, image_size=32, limit=8
+    )
     x, y = next(iter(bundle.train))
     model = SmallClassifier(num_classes=10)
     out = model(x)

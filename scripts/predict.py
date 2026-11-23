@@ -2,10 +2,12 @@
 
 import argparse
 import json
+
 import torch
 from PIL import Image
+
 from configs.settings import get_settings
-from src.data.cifar10 import base_transform, CLASSES
+from src.data.cifar10 import CLASSES, base_transform
 from src.models.classifier import SmallClassifier
 
 
@@ -28,6 +30,7 @@ def predict_image(image_path: str, settings=None):
         "confidence": float(probs[idx].item()),
         "probabilities": {classes[i]: float(probs[i].item()) for i in range(len(classes))},
     }
+
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()

@@ -3,14 +3,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-import app._path  # noqa: F401  -- project-root path bootstrap
 
-import io
 import streamlit as st
 import torch
 from PIL import Image
+
+import app._path  # noqa: F401  -- project-root path bootstrap
 from configs.settings import get_settings
-from src.data.cifar10 import base_transform, CLASSES
+from src.data.cifar10 import CLASSES, base_transform
 from src.models.classifier import SmallClassifier
 
 st.title("Inference")
@@ -31,7 +31,7 @@ if upload:
         idx = int(probs.argmax().item())
         st.success(f"Prediction: {classes[idx]} ({probs[idx].item():.3f})")
         st.bar_chart({classes[i]: float(probs[i].item()) for i in range(len(classes))})
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         st.warning(f"Inference unavailable: {e}. Expected model at {s.model_path}")
 else:
     st.info("Upload an image to run prediction.")

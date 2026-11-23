@@ -5,8 +5,9 @@ so ``import configs`` / ``import src`` fail when running ``streamlit run
 app/Home.py`` from the project root. Import this module as the first thing
 in ``app/Home.py`` and every ``app/pages/*.py`` before any local imports.
 """
-from pathlib import Path
+
 import sys
+from pathlib import Path
 
 _PROJECT_ROOT = str(Path(__file__).resolve().parents[1])
 if _PROJECT_ROOT not in sys.path:

@@ -1,11 +1,11 @@
-﻿[build-system]
+[build-system]
 requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "eyes-of-truth"
 version = "0.1.0"
-description = "DINO self-supervised CV dashboard (CIFAR-10)"
+description = "DINO self-supervised learning demo (CIFAR-10)"
 requires-python = ">=3.11"
 dependencies = []
 

@@ -1,11 +1,12 @@
-﻿import sys
+﻿# ruff: noqa: N999
+import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-import app._path  # noqa: F401  -- project-root path bootstrap
-
 import streamlit as st
+
+import app._path  # noqa: F401  -- project-root path bootstrap
 
 st.set_page_config(page_title="The Eyes of Truth", layout="wide")
 st.title("The Eyes of Truth")

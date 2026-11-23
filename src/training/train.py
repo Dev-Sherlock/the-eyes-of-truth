@@ -5,11 +5,11 @@ from pathlib import Path
 
 import mlflow
 import torch
-import torch.nn as nn
+from torch import nn
 from torch.optim import AdamW
 
 from configs.settings import get_settings
-from src.data.cifar10 import get_dino_dataloader, get_cifar10_dataloaders
+from src.data.cifar10 import get_cifar10_dataloaders, get_dino_dataloader
 from src.models.classifier import SmallClassifier
 from src.models.dino import DINO, dino_loss
 
@@ -23,16 +23,31 @@ def pretrain_dino(settings=None):
     ensure_dir(s.artifacts_dir)
     device = torch.device(s.device)
     loader = get_dino_dataloader(
-        s.data_dir, batch_size=s.batch_size, num_workers=s.num_workers,
-        global_crop_size=s.global_crop_size, local_crop_size=s.local_crop_size,
-        n_global=s.n_global_crops, n_local=s.n_local_crops,
+        s.data_dir,
+        batch_size=s.batch_size,
+        num_workers=s.num_workers,
+        global_crop_size=s.global_crop_size,
+        local_crop_size=s.local_crop_size,
+        n_global=s.n_global_crops,
+        n_local=s.n_local_crops,
     )
     model = DINO(out_dim=s.out_dim).to(device)
-    opt = AdamW(list(model.student_backbone.parameters()) + list(model.student_head.parameters()), lr=s.dino_lr, weight_decay=s.dino_weight_decay)
+    opt = AdamW(
+        list(model.student_backbone.parameters()) + list(model.student_head.parameters()),
+        lr=s.dino_lr,
+        weight_decay=s.dino_weight_decay,
+    )
     mlflow.set_tracking_uri(s.mlflow_tracking_uri)
     mlflow.set_experiment("dino_pretrain")
     with mlflow.start_run():
-        mlflow.log_params({"epochs": s.dino_epochs, "batch_size": s.batch_size, "lr": s.dino_lr, "device": s.device})
+        mlflow.log_params(
+            {
+                "epochs": s.dino_epochs,
+                "batch_size": s.batch_size,
+                "lr": s.dino_lr,
+                "device": s.device,
+            }
+        )
         for epoch in range(s.dino_epochs):
             model.train()
             running = 0.0
@@ -58,7 +73,9 @@ def finetune_classifier(settings=None, backbone_path: str | None = None):
     s = settings or get_settings()
     ensure_dir(s.artifacts_dir)
     device = torch.device(s.device)
-    bundle = get_cifar10_dataloaders(s.data_dir, batch_size=s.batch_size, num_workers=s.num_workers, image_size=s.image_size)
+    bundle = get_cifar10_dataloaders(
+        s.data_dir, batch_size=s.batch_size, num_workers=s.num_workers, image_size=s.image_size
+    )
     model = SmallClassifier(num_classes=s.num_classes).to(device)
     bp = backbone_path or s.backbone_path
     if os.path.exists(bp):
@@ -69,7 +86,14 @@ def finetune_classifier(settings=None, backbone_path: str | None = None):
     mlflow.set_tracking_uri(s.mlflow_tracking_uri)
     mlflow.set_experiment("classifier_finetune")
     with mlflow.start_run():
-        mlflow.log_params({"epochs": s.finetune_epochs, "batch_size": s.batch_size, "lr": s.finetune_lr, "device": s.device})
+        mlflow.log_params(
+            {
+                "epochs": s.finetune_epochs,
+                "batch_size": s.batch_size,
+                "lr": s.finetune_lr,
+                "device": s.device,
+            }
+        )
         for epoch in range(s.finetune_epochs):
             model.train()
             correct = total = 0
